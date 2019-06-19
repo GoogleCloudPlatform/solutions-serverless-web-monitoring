@@ -1,0 +1,11 @@
+{
+  "name": "tracer",
+  "version": "0.0.1",
+  "dependencies": {
+    "@google-cloud/storage": "2.4.2",
+    "puppeteer": "^1.13.0"
+  },
+  "scripts": {
+    "test": "echo placeholder for unit tests..."
+  }
+}

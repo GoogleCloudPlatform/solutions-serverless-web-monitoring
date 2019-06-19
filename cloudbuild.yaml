@@ -1,0 +1,75 @@
+# Copyright 2019 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# [START unit-tests-block]
+steps:
+
+# setup & unit tests for Node tracer function
+- id: node-init
+  name: 'gcr.io/cloud-builders/npm'
+  args: ['install', 'functions/tracer']
+
+- id: node-unit-tests
+  name: 'gcr.io/cloud-builders/npm'
+  args: ['test', '--prefix', 'functions/tracer']
+
+
+# run unit tests for Python functions
+- id: python-unit-tests
+  name: 'python:3.7-slim'
+  entrypoint: /bin/sh
+  args:
+    - -c
+    - 'pip install -r requirements.txt && python -B -m pytest functions/tests'
+# [END unit-tests-block]
+
+
+# [START e2e-tests-block]
+# setup Terraform using public terraform Docker image
+- id: terraform-init
+  name: hashicorp/terraform:0.12.0
+  args: ['init']
+
+
+# deploy the required GCP resources
+- id: terraform-apply
+  name: hashicorp/terraform:0.12.0
+  args: ['apply', '-auto-approve']
+  env:
+    - 'TF_VAR_project_id=$_TEST_PROJECT_ID'
+    - 'TF_VAR_region=$_REGION'
+    - 'TF_VAR_suffix=$BUILD_ID'
+
+
+# run end-to-end tests to verify live interactions
+- id: end-to-end-tests
+  name: 'python:3.7-slim'
+  entrypoint: /bin/sh
+  args:
+    - -c
+    - 'pip install -r requirements.txt && python -m pytest e2e --tfstate terraform.tfstate'
+# [END e2e-tests-block]
+
+
+# [START destroy-resources-block]
+# delete the resources to clean up
+- id: terraform-destroy
+  name: hashicorp/terraform:0.12.0
+  args: ['destroy', '-auto-approve']
+  env:
+    - 'TF_VAR_project_id=$_TEST_PROJECT_ID'
+    - 'TF_VAR_region=$_REGION'
+    - 'TF_VAR_suffix=$BUILD_ID'
+# [END destroy-resources-block]

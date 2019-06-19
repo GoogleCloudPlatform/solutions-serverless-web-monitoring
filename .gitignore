@@ -1,0 +1,27 @@
+# IntelliJ
+.idea/
+.iml
+
+# Eclipse
+.classpath
+.project
+.settings/
+ 
+# Mac
+.DS_Store
+ 
+# Maven
+log/
+target/
+
+# Environment
+venv/
+__pycache__
+.pytest_cache
+node_modules/
+package-lock.json
+build/
+
+# terraform
+.terraform
+*.tfstate*

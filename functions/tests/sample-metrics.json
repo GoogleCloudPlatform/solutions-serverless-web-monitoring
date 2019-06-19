@@ -1,0 +1,136 @@
+{
+  "metrics": [
+    {
+      "name": "Timestamp",
+      "value": 57.24164
+    },
+    {
+      "name": "AudioHandlers",
+      "value": 0
+    },
+    {
+      "name": "Documents",
+      "value": 3
+    },
+    {
+      "name": "Frames",
+      "value": 1
+    },
+    {
+      "name": "JSEventListeners",
+      "value": 0
+    },
+    {
+      "name": "LayoutObjects",
+      "value": 11
+    },
+    {
+      "name": "MediaKeySessions",
+      "value": 0
+    },
+    {
+      "name": "MediaKeys",
+      "value": 0
+    },
+    {
+      "name": "Nodes",
+      "value": 43
+    },
+    {
+      "name": "Resources",
+      "value": 0
+    },
+    {
+      "name": "ScriptPromises",
+      "value": 0
+    },
+    {
+      "name": "ContextLifecycleStateObservers",
+      "value": 0
+    },
+    {
+      "name": "V8PerContextDatas",
+      "value": 2
+    },
+    {
+      "name": "WorkerGlobalScopes",
+      "value": 0
+    },
+    {
+      "name": "UACSSResources",
+      "value": 0
+    },
+    {
+      "name": "RTCPeerConnections",
+      "value": 0
+    },
+    {
+      "name": "ResourceFetchers",
+      "value": 3
+    },
+    {
+      "name": "AdSubframes",
+      "value": 0
+    },
+    {
+      "name": "DetachedScriptStates",
+      "value": 2
+    },
+    {
+      "name": "LayoutCount",
+      "value": 1
+    },
+    {
+      "name": "RecalcStyleCount",
+      "value": 1
+    },
+    {
+      "name": "LayoutDuration",
+      "value": 0.265195
+    },
+    {
+      "name": "RecalcStyleDuration",
+      "value": 0.002113
+    },
+    {
+      "name": "ScriptDuration",
+      "value": 0.000391
+    },
+    {
+      "name": "V8CompileDuration",
+      "value": 0.003662
+    },
+    {
+      "name": "TaskDuration",
+      "value": 0.460344
+    },
+    {
+      "name": "TaskOtherDuration",
+      "value": 0.192645
+    },
+    {
+      "name": "ThreadTime",
+      "value": 0.18
+    },
+    {
+      "name": "JSHeapUsedSize",
+      "value": 1293728
+    },
+    {
+      "name": "JSHeapTotalSize",
+      "value": 2887680
+    },
+    {
+      "name": "FirstMeaningfulPaint",
+      "value": 55.033907
+    },
+    {
+      "name": "DomContentLoaded",
+      "value": 54.564858
+    },
+    {
+      "name": "NavigationStart",
+      "value": 54.247796
+    }
+  ]
+}

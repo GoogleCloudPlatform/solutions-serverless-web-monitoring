@@ -1,0 +1,8 @@
+# combine dependencies of individual functions
+-r ./functions/analyzer/requirements.txt
+-r ./functions/alerter/requirements.txt
+
+backoff==1.8.0
+pytest==4.3.0
+google-api-python-client==1.7.8
+google-auth==1.6.3
