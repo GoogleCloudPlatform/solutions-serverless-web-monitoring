@@ -16,8 +16,10 @@
 
 const puppeteer = require('puppeteer');
 const {Storage} = require('@google-cloud/storage');
+const Url = require('url');
 
 const metricsBucket = process.env.BUCKET_METRICS;
+const allowedHosts = process.env.ALLOWED_HOSTS;
 
 let gcs;
 
@@ -32,9 +34,14 @@ let gcs;
  */
 exports.trace = async (req, res) => {
   const url = getUrl(req);
-  if (!url) {
-    console.error('URL to trace not specified')
-    return res.status(400).send('Please specify URL to trace');
+  if (!url || !url.hostname) {
+    console.error('Valid URL to trace not specified')
+    return res.status(400).send('Please specify a valid URL to trace');
+  }
+  // allow analysis only of known domains
+  if (!url.hostname.match(allowedHosts)) {
+    console.error('Analysis of '+url.hostname+' not permitted. See ALLOWED_HOSTS variable');
+    return res.status(400).send('Analysis of '+url.hostname+' not permitted');
   }
 
   let browser;
@@ -52,8 +59,8 @@ exports.trace = async (req, res) => {
     await client.send('Performance.enable');
 
     // browse to the page, capture and write the performance metrics
-    console.log('Fetching url: '+url);
-    await page.goto(url, {
+    console.log('Fetching url: '+url.href);
+    await page.goto(url.href, {
       'waitUntil' : 'networkidle0'
     });
     const performanceMetrics = await client.send('Performance.getMetrics');
@@ -109,9 +116,9 @@ function createUploadOptions(contentType, url) {
 
 function getUrl(req) {
   if (req.query.url || req.body.url) {
-    return req.query.url || req.body.url;
+    return Url.parse(req.query.url || req.body.url);
   }
   try {
-    return JSON.parse(req.body).url;
+    return Url.parse(JSON.parse(req.body).url);
   } catch (e) {}
 }

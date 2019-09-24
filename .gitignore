@@ -21,6 +21,7 @@ __pycache__
 node_modules/
 package-lock.json
 build/
+sandbox/
 
 # terraform
 .terraform

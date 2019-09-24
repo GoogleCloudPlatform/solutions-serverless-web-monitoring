@@ -23,3 +23,6 @@ MAX_TIME_MEANINGFUL_PAINT: "3000"
 
 # Performance alerts published here
 ALERT_TOPIC: performance-alerts
+
+# Only allow analysis of certain domains. Regex.
+ALLOWED_HOSTS: www\.example\.com|cloud\.google\.com

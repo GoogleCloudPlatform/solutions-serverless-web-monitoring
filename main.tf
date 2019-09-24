@@ -25,6 +25,9 @@ variable "suffix" {}
 variable "fscollection_analysis" {
   default = "page-metrics"
 }
+variable "allowed_hosts" {
+  default = "www\\.example\\.com|cloud\\.google\\.com"
+}
 variable "max_time_to_meaningful_paint" {
   default = 3000
 }
@@ -37,7 +40,7 @@ variable "local_output_path" {
 provider "google" {
   project = "${var.project_id}"
   region = "${var.region}"
-  version = "2.7.0"
+  version = "2.15.0"
 }
 
 provider "archive" {}
@@ -104,7 +107,21 @@ resource "google_cloudfunctions_function" "function_tracer" {
   source_archive_object = "${google_storage_bucket_object.gcs_tracer_source.name}"
   environment_variables = {
     BUCKET_METRICS = "${google_storage_bucket.bucket_metrics.name}"
+    ALLOWED_HOSTS = "${var.allowed_hosts}"
   }
+}
+
+// prevent unauthenticated invocations
+resource "google_cloudfunctions_function_iam_binding" "tracer_disallow_unauthenticated" {
+  project = "${var.project_id}"
+  region = "${var.region}"
+  cloud_function = "${google_cloudfunctions_function.function_tracer.name}"
+  role = "roles/cloudfunctions.invoker"
+  members = [
+  ]
+  depends_on = [
+    google_cloudfunctions_function.function_tracer
+  ]
 }
 // [END function-tracer-block]
 
