@@ -154,20 +154,17 @@ def get_messages(subscriber, subscription):
 
 # [START setup-block]
 @pytest.fixture(autouse=True, scope='module')
-def setup(pytestconfig):
+def setup(pytestconfig, terraform_infra):
   global PROJECT, REGION, METRICS_BUCKET, TRACER_FUNCTION, ALERT_SUBSCRIPTION
 
   # if we used Terraform to create the GCP resources, use the output variables
-  if pytestconfig.getoption('tfstate') is not None:
-    tf_state_file = pytestconfig.getoption('tfstate')
-    with open(tf_state_file, 'r', encoding='utf-8') as fp:
-      tf_state = json.load(fp)
-      tf_output_vars = tf_state['outputs']
-      PROJECT = tf_output_vars['project']['value']
-      REGION = tf_output_vars['region']['value']
-      METRICS_BUCKET = tf_output_vars['bucket_metrics']['value']
-      TRACER_FUNCTION = tf_output_vars['function_tracer']['value']
-      ALERT_SUBSCRIPTION = tf_output_vars['pubsub_subscription_alerts']['value']
+  if terraform_infra is not None:
+    tf_output_vars = terraform_infra['outputs']
+    PROJECT = tf_output_vars['project']['value']
+    REGION = tf_output_vars['region']['value']
+    METRICS_BUCKET = tf_output_vars['bucket_metrics']['value']
+    TRACER_FUNCTION = tf_output_vars['function_tracer']['value']
+    ALERT_SUBSCRIPTION = tf_output_vars['pubsub_subscription_alerts']['value']
 
   #  otherwise variable passed directly on command line
   else:
