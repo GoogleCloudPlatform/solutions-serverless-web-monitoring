@@ -35,41 +35,25 @@ steps:
     - 'pip install -r requirements.txt && python -B -m pytest functions/tests'
 # [END unit-tests-block]
 
+# [START build-ci-image-block]
+- id: 'build-ci-image'
+  name: 'gcr.io/kaniko-project/executor:latest'
+  args:
+    - '--dockerfile=Dockerfile'
+    - '--destination=gcr.io/$PROJECT_ID/solutions-serverless-web-monitoring-e2e:$BUILD_ID'
+    - '--cache=true'
+    - '--context=dir:///workspace/'
+# [ENDbuild-ci-image-block]
+
 
 # [START e2e-tests-block]
-# setup Terraform using public terraform Docker image
-- id: terraform-init
-  name: hashicorp/terraform:0.12.0
-  args: ['init']
-
-
-# deploy the required GCP resources
-- id: terraform-apply
-  name: hashicorp/terraform:0.12.0
-  args: ['apply', '-auto-approve']
-  env:
-    - 'TF_VAR_project_id=$_TEST_PROJECT_ID'
-    - 'TF_VAR_region=$_REGION'
-    - 'TF_VAR_suffix=$BUILD_ID'
-
-
 # run end-to-end tests to verify live interactions
 - id: end-to-end-tests
-  name: 'python:3.7-slim'
-  entrypoint: /bin/sh
-  args:
-    - -c
-    - 'pip install -r requirements.txt && python -m pytest e2e --tfstate terraform.tfstate'
-# [END e2e-tests-block]
-
-
-# [START destroy-resources-block]
-# delete the resources to clean up
-- id: terraform-destroy
-  name: hashicorp/terraform:0.12.0
-  args: ['destroy', '-auto-approve']
+  name: 'gcr.io/$PROJECT_ID/solutions-serverless-web-monitoring-e2e:$BUILD_ID'
   env:
     - 'TF_VAR_project_id=$_TEST_PROJECT_ID'
     - 'TF_VAR_region=$_REGION'
     - 'TF_VAR_suffix=$BUILD_ID'
-# [END destroy-resources-block]
+  args:
+    - 'e2e'
+# [END e2e-tests-block]
